@@ -26,6 +26,7 @@ public class ConsoleTheme {
     public static String bold(String s) { return BOLD + s + RESET; }
     public static String red(String s) { return RED + s + RESET; }
     public static String purple(String s) { return PURPLE + s + RESET; }
+    public static String blue(String s) { return BLUE + s + RESET; }
 
     public static void printDivider() {
         System.out.println(CYAN + "━".repeat(78) + RESET);

@@ -15,6 +15,11 @@ import java.util.List;
  */
 public class Main {
     public static void main(String[] args) {
+        // Ensure UTF-8 output encoding in terminal
+        try {
+            System.setOut(new java.io.PrintStream(System.out, true, java.nio.charset.StandardCharsets.UTF_8));
+        } catch (Exception ignored) {}
+
         // Initialize Core Domain Services (Dependency Injection)
         IUserService userService = new UserService();
         IBookService bookService = new BookService();
