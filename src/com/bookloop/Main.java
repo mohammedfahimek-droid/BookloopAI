@@ -38,9 +38,38 @@ public class Main {
             return;
         }
 
-        // Start Interactive Console CLI Application
-        BookLoopCLI cli = new BookLoopCLI(userService, bookService, matchingEngine, barterService);
-        cli.start();
+        // Support Console CLI mode with `--cli` argument
+        if (args.length > 0 && "--cli".equalsIgnoreCase(args[0])) {
+            BookLoopCLI cli = new BookLoopCLI(userService, bookService, matchingEngine, barterService);
+            cli.start();
+            return;
+        }
+
+        // Launch Localhost Web Server Application
+        int port = 8080;
+        try {
+            com.bookloop.web.BookLoopWebServer webServer = new com.bookloop.web.BookLoopWebServer(
+                    port, userService, bookService, matchingEngine, barterService
+            );
+            webServer.start();
+
+            // Attempt to open browser automatically
+            try {
+                if (java.awt.Desktop.isDesktopSupported() && java.awt.Desktop.getDesktop().isSupported(java.awt.Desktop.Action.BROWSE)) {
+                    java.awt.Desktop.getDesktop().browse(new java.net.URI("http://localhost:" + port));
+                }
+            } catch (Exception ignored) {}
+
+            System.out.println("  💡 Application running. Press Ctrl+C in this window to stop.");
+
+            // Keep main thread alive
+            Thread.currentThread().join();
+        } catch (Exception e) {
+            System.err.println("Failed to start web server on port " + port + ": " + e.getMessage());
+            System.out.println("Falling back to Console CLI...");
+            BookLoopCLI cli = new BookLoopCLI(userService, bookService, matchingEngine, barterService);
+            cli.start();
+        }
     }
 
     /**
